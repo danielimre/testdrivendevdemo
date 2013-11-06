@@ -12,16 +12,21 @@ import java.util.Properties;
  *
  */
 public class PropertyFileBasedLocalizedDataProvider implements LocalizedDataProvider {
+    private ResourceInputStreamProvider resourceInputStreamProvider = new DefaultResourceInputStreamProvider();
     private String resourcePattern;
 
     @Override
     public String getLocalizedData(String pageType, LocalizedDataType dataType, Locale locale) {
         String localizedData;
         try {
-            Properties properties = new Properties();
-            InputStream in = getClass().getResourceAsStream(getPropertyPath(pageType, dataType));
+            InputStream in = resourceInputStreamProvider.getInputStream(getPropertyPath(pageType, dataType));
             if (in != null) {
-                properties.load(in);
+                Properties properties = new Properties();
+                try {
+                    properties.load(in);
+                } finally {
+                    in.close();
+                }
                 localizedData = properties.getProperty(locale.toString());
             } else {
                 localizedData = null;
@@ -39,5 +44,9 @@ public class PropertyFileBasedLocalizedDataProvider implements LocalizedDataProv
 
     public void setResourcePattern(String resourcePattern) {
         this.resourcePattern = resourcePattern;
+    }
+
+    public void setResourceInputStreamProvider(ResourceInputStreamProvider resourceInputStreamProvider) {
+        this.resourceInputStreamProvider = resourceInputStreamProvider;
     }
 }
