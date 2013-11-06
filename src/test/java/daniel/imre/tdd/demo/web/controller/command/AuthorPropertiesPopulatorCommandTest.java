@@ -54,6 +54,41 @@ public class AuthorPropertiesPopulatorCommandTest {
         assertEquals(AUTHOR_DESCRIPTION, model.getAuthorDescription());
     }
 
+    @Test
+    public void shouldSkipFieldIfLocalizedDataNotFoundInPropertyFile() {
+
+    }
+
+    @Test
+    public void shouldSkipFieldIfPropertyFileNotFoundForLocaleAndType() {
+
+    }
+
+    @Test
+    public void shouldSkipFieldIfErrorHappensDuringDataRetrieval() {
+
+    }
+
+    @Test
+    public void shouldPopulateAuthorDescriptionIfAuthorNamePopulationHadErrors() {
+
+    }
+
+    @Test
+    public void shouldClosePropertyFileAfterReadingIt() {
+
+    }
+
+    @Test
+    public void shouldClosePropertyFileEvenIfErrorHappens() {
+
+    }
+
+    @Test
+    public void shouldCachePropertyFileContent() {
+
+    }
+
     private PageContext aContextWith(Locale locale, String pageType) {
         PageContext context = new PageContext();
         context.setLocale(locale);
