@@ -17,5 +17,5 @@ public interface PageCommand {
      * @param context the page context
      * @param model the page model
      */
-    void exectue(PageContext context, PageModel model);
+    void execute(PageContext context, PageModel model);
 }
