@@ -20,8 +20,12 @@ public class PropertyFileBasedLocalizedDataProvider implements LocalizedDataProv
         try {
             Properties properties = new Properties();
             InputStream in = getClass().getResourceAsStream(getPropertyPath(pageType, dataType));
-            properties.load(in);
-            localizedData = properties.getProperty(locale.toString());
+            if (in != null) {
+                properties.load(in);
+                localizedData = properties.getProperty(locale.toString());
+            } else {
+                localizedData = null;
+            }
         } catch (IOException ex) {
             //some logging should go here
             localizedData = null;

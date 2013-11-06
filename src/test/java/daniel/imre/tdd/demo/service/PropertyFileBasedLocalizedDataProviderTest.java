@@ -19,6 +19,8 @@ public class PropertyFileBasedLocalizedDataProviderTest {
     private static final Locale LOCALE = Locale.UK;
     private static final String PAGE_TYPE = "homepage";
     private static final Locale MISSING_LOCALE = Locale.GERMAN;
+    private static final Locale ANY_LOCALE = null;
+    private static final String MISSING_PAGE_TYPE = "missingpage";
     private PropertyFileBasedLocalizedDataProvider provider = new PropertyFileBasedLocalizedDataProvider();
 
     @Before
@@ -40,6 +42,8 @@ public class PropertyFileBasedLocalizedDataProviderTest {
 
     @Test
     public void shouldReturnNullIfPropertyFileIsNotFound() {
+        String result = provider.getLocalizedData(MISSING_PAGE_TYPE, LocalizedDataType.AUTHOR_NAME, ANY_LOCALE);
+        assertNull(result);
     }
 
     @Test
