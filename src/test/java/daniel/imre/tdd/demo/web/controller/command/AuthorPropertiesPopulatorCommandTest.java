@@ -1,12 +1,19 @@
 package daniel.imre.tdd.demo.web.controller.command;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
 import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import daniel.imre.tdd.demo.service.LocalizedDataProvider;
+import daniel.imre.tdd.demo.service.LocalizedDataType;
 import daniel.imre.tdd.demo.web.data.PageContext;
 import daniel.imre.tdd.demo.web.data.PageModel;
 
@@ -26,20 +33,25 @@ import daniel.imre.tdd.demo.web.data.PageModel;
  * @author Daniel_Imre
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AuthorPropertiesPopulatorCommandTest {
     private static final String AUTHOR_NAME = "Homepage author";
     private static final Locale LOCALE = Locale.UK;
     private static final String PAGE_TYPE = "homepage";
-    private static final Object AUTHOR_DESCRIPTION = "English text for homepage goes here";
+    private static final String AUTHOR_DESCRIPTION = "English text for homepage goes here";
+    private static final Locale MISSING_LOCALE = Locale.GERMAN;
     private AuthorPropertiesPopulatorCommand command = new AuthorPropertiesPopulatorCommand();
+    @Mock
+    private LocalizedDataProvider localizedDataProvider;
 
     @Before
     public void initContext() {
-        command.setResourcePattern("/author/data_{0}_{1}.properties");
+        command.setLocalizedDataProvider(localizedDataProvider);
     }
 
     @Test
-    public void shouldPopulateAuthorNameFromResourceBasedOnLocaleAndType() {
+    public void shouldPopulateAuthorNameBasedOnLocaleAndType() {
+        when(localizedDataProvider.getLocalizedData(PAGE_TYPE, LocalizedDataType.AUTHOR_NAME, LOCALE)).thenReturn(AUTHOR_NAME);
         PageContext context = aContextWith(LOCALE, PAGE_TYPE);
         PageModel model = new PageModel();
         command.execute(context, model);
@@ -47,7 +59,8 @@ public class AuthorPropertiesPopulatorCommandTest {
     }
 
     @Test
-    public void shouldPopulateAuthorDescriptionFromResourceBasedOnLocaleAndType() {
+    public void shouldPopulateAuthorDescriptionBasedOnLocaleAndType() {
+        when(localizedDataProvider.getLocalizedData(PAGE_TYPE, LocalizedDataType.AUTHOR_DESCRIPTION, LOCALE)).thenReturn(AUTHOR_DESCRIPTION);
         PageContext context = aContextWith(LOCALE, PAGE_TYPE);
         PageModel model = new PageModel();
         command.execute(context, model);
@@ -55,38 +68,12 @@ public class AuthorPropertiesPopulatorCommandTest {
     }
 
     @Test
-    public void shouldSkipFieldIfLocalizedDataNotFoundInPropertyFile() {
-
-    }
-
-    @Test
-    public void shouldSkipFieldIfPropertyFileNotFoundForLocaleAndType() {
-
-    }
-
-    @Test
-    public void shouldSkipFieldIfErrorHappensDuringDataRetrieval() {
-
-    }
-
-    @Test
-    public void shouldPopulateAuthorDescriptionIfAuthorNamePopulationHadErrors() {
-
-    }
-
-    @Test
-    public void shouldClosePropertyFileAfterReadingIt() {
-
-    }
-
-    @Test
-    public void shouldClosePropertyFileEvenIfErrorHappens() {
-
-    }
-
-    @Test
-    public void shouldCachePropertyFileContent() {
-
+    public void shouldSkipFieldIfLocalizedDataNotFound() {
+        PageContext context = aContextWith(MISSING_LOCALE, PAGE_TYPE);
+        PageModel model = new PageModel();
+        command.execute(context, model);
+        assertNull(model.getAuthorName());
+        assertNull(model.getAuthorDescription());
     }
 
     private PageContext aContextWith(Locale locale, String pageType) {
