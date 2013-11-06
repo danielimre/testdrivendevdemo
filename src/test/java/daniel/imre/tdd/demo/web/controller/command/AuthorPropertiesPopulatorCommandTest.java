@@ -30,6 +30,7 @@ public class AuthorPropertiesPopulatorCommandTest {
     private static final String AUTHOR_NAME = "Homepage author";
     private static final Locale LOCALE = Locale.UK;
     private static final String PAGE_TYPE = "homepage";
+    private static final Object AUTHOR_DESCRIPTION = "English text for homepage goes here";
     private AuthorPropertiesPopulatorCommand command = new AuthorPropertiesPopulatorCommand();
 
     @Before
@@ -47,7 +48,10 @@ public class AuthorPropertiesPopulatorCommandTest {
 
     @Test
     public void shouldPopulateAuthorDescriptionFromResourceBasedOnLocaleAndType() {
-
+        PageContext context = aContextWith(LOCALE, PAGE_TYPE);
+        PageModel model = new PageModel();
+        command.execute(context, model);
+        assertEquals(AUTHOR_DESCRIPTION, model.getAuthorDescription());
     }
 
     private PageContext aContextWith(Locale locale, String pageType) {

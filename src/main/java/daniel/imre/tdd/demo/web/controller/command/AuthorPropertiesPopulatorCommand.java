@@ -19,18 +19,26 @@ public class AuthorPropertiesPopulatorCommand implements PageCommand {
 
     @Override
     public void execute(PageContext context, PageModel model) {
-        try {
-            Properties properties = new Properties();
-            InputStream in = getClass().getResourceAsStream(getPropertyPath(context));
-            properties.load(in);
-            model.setAuthorName(properties.getProperty(context.getLocale().toString()));
-        } catch (IOException ex) {
-            model.setAuthorName(null);
-        }
+        model.setAuthorName(getDataForType(context, "author_name"));
+        model.setAuthorDescription(getDataForType(context, "author_description"));
     }
 
-    private String getPropertyPath(PageContext context) {
-        return MessageFormat.format(resourcePattern, "author_name", context.getType());
+    private String getDataForType(PageContext context, String dataType) {
+        String localizedData;
+        try {
+            Properties properties = new Properties();
+            InputStream in = getClass().getResourceAsStream(getPropertyPath(context, dataType));
+            properties.load(in);
+            localizedData = properties.getProperty(context.getLocale().toString());
+        } catch (IOException ex) {
+            //some logging should go here
+            localizedData = null;
+        }
+        return localizedData;
+    }
+
+    private String getPropertyPath(PageContext context, String dataType) {
+        return MessageFormat.format(resourcePattern, dataType, context.getType());
     }
 
     public void setResourcePattern(String resourcePattern) {
