@@ -6,7 +6,9 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import daniel.imre.tdd.demo.service.DefaultPropertiesProvider;
 import daniel.imre.tdd.demo.service.LocalizedDataProvider;
+import daniel.imre.tdd.demo.service.PropertiesProvider;
 import daniel.imre.tdd.demo.service.PropertyFileBasedLocalizedDataProvider;
 import daniel.imre.tdd.demo.web.data.PageContext;
 import daniel.imre.tdd.demo.web.data.PageModel;
@@ -42,7 +44,12 @@ public class AuthorPropertiesPopulatorCommandIntegrationTest {
     private LocalizedDataProvider createLocalizedDataProvider() {
         PropertyFileBasedLocalizedDataProvider provider = new PropertyFileBasedLocalizedDataProvider();
         provider.setResourcePattern("/author/data_{0}_{1}.properties");
+        provider.setPropertiesProvider(createPropertiesProvider());
         return provider;
+    }
+
+    private PropertiesProvider createPropertiesProvider() {
+        return new DefaultPropertiesProvider();
     }
 
     private PageContext aContextWith(Locale locale, String pageType) {
