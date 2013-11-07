@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import daniel.imre.tdd.demo.service.CachingPropertiesProvider;
 import daniel.imre.tdd.demo.service.DefaultPropertiesProvider;
 import daniel.imre.tdd.demo.service.LocalizedDataProvider;
 import daniel.imre.tdd.demo.service.PropertiesProvider;
@@ -44,7 +45,13 @@ public class AuthorPropertiesPopulatorCommandIntegrationTest {
     private LocalizedDataProvider createLocalizedDataProvider() {
         PropertyFileBasedLocalizedDataProvider provider = new PropertyFileBasedLocalizedDataProvider();
         provider.setResourcePattern("/author/data_{0}_{1}.properties");
-        provider.setPropertiesProvider(createPropertiesProvider());
+        provider.setPropertiesProvider(createCachingPropertiesProvider());
+        return provider;
+    }
+
+    private PropertiesProvider createCachingPropertiesProvider() {
+        CachingPropertiesProvider provider = new CachingPropertiesProvider();
+        provider.setProvider(createPropertiesProvider());
         return provider;
     }
 

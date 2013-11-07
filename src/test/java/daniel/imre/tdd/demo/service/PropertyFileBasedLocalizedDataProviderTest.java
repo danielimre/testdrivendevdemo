@@ -50,11 +50,6 @@ public class PropertyFileBasedLocalizedDataProviderTest {
         assertNull(result);
     }
 
-    @Test
-    public void shouldCachePropertyFileContent() {
-
-    }
-
     private void expectPropertiesForPageAndDataType() {
         when(propertiesProvider.getProperties("/author/data_author_name_homepage.properties")).thenReturn(
                 Collections.<Object, Object>singletonMap(LOCALE.toString(), LOCALIZED_DATA));
